@@ -89,10 +89,10 @@ public class Testrun {
                 }
 
                 // Print statistics showing number distribution into buckets
-                System.out.println("Bucket\tCount");
+                System.out.println("Bucket\tCount\t% Of total");
                 for (int i = 0; i < buckets.length; i++) {
                     if (buckets[i] != 0) {
-                        System.out.println(i + "\t\t" + buckets[i]);
+                        System.out.println(i + "\t\t" + buckets[i] + "\t" + (float)buckets[i]/paramNumberOfKeys*100);
                     }
                 }
                 break;
