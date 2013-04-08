@@ -54,7 +54,7 @@ public class HashTable {
             size = 0;
             initializeBuckets();
             rehash(oldBuckets);
-            if (TestrunInsertions.paramVerbose) System.out.println("Resize triggered by exceeding load factor of " + loadFactor
+            if (Testrun.paramVerbose) System.out.println("Resize triggered by exceeding load factor of " + loadFactor
                     + ". Keys: " + size + "; New capacity: " + getCapacity() + "; New load factor: " + getCurrentLoadFactor());
         }
 
