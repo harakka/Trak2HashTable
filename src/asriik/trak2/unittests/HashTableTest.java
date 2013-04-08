@@ -6,10 +6,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Created by: harakka
+ * TestNG test for verifying some basic HashTable functionality.
+ * Created by: Antti Riikonen
  * Date and time: 31.3.2013, 19:22
  */
-public class ModuloHashTableTest {
+public class HashTableTest {
     HashTable hashtable;
 
     @BeforeMethod

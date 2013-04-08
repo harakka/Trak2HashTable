@@ -33,13 +33,13 @@ public class Testrun {
      * Main method that runs the actual tests.
      */
     public static void main(String[] args) {
-        /* Commet this back in if you need time to attach a profiler
+        // Comment this back in if you need time to attach a profiler
         try {
             System.out.println("Waiting for 10 seconds, attach a profiler now!");
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
         // Read command line parameters and set up the test run settings accordingly
         setupFromParams(args);
 
@@ -92,7 +92,7 @@ public class Testrun {
                 System.out.println("Bucket\tCount\t% Of total");
                 for (int i = 0; i < buckets.length; i++) {
                     if (buckets[i] != 0) {
-                        System.out.println(i + "\t\t" + buckets[i] + "\t" + (float)buckets[i]/paramNumberOfKeys*100);
+                        System.out.println(i + "\t\t" + buckets[i] + "\t" + (double)buckets[i]/paramNumberOfKeys*100);
                     }
                 }
                 break;
@@ -110,10 +110,10 @@ public class Testrun {
                 System.out.println(watch.toString() + ".\t" + table.getSize() + "\t" + table.getCapacity() + "\t" + table.getCurrentLoadFactor() + "\t" + table.longestChain());
 
                 int[] chainLengths = table.chainLengths();
-                System.out.println("Chain length\tCount");
+                System.out.println("Chain length\tCount\t% Of keys in chains of this length");
                 for (int i = 0; i < chainLengths.length; i++) {
                     if (chainLengths[i] != 0) {
-                        System.out.println(i + "\t\t" + chainLengths[i]);
+                        System.out.println(i + "\t\t" + chainLengths[i] + "\t" + (double)i*chainLengths[i]/paramNumberOfKeys*100);
                     }
                 }
                 break;

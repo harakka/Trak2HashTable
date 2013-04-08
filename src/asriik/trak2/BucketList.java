@@ -1,18 +1,30 @@
 package asriik.trak2;
 
 /**
- * Singly linked list, meant to be used as a hash table bucket.
+ * Singly linked list, meant to be used as a hash table bucket. Insertions go in front.
  * Created by: Antti Riikonen
  * Date and time: 29.3.2013, 16:55
  */
 public class BucketList {
+    // List head
     private BucketNode head = null;
+    // List size
     private int size = 0;
 
+    /**
+     * List node helper class.
+     */
     private class BucketNode {
+        // Node value
         private final int value;
+        // Child node pointer
         private BucketNode child = null;
 
+        /**
+         * Create a new bucket node with given value and child node.
+         * @param value Node value
+         * @param child Child node
+         */
         public BucketNode(int value, BucketNode child) {
             this.value = value;
             this.child = child;
@@ -92,6 +104,10 @@ public class BucketList {
         size++;
     }
 
+    /**
+     * Returns all values in list as an array.
+     * @return array of values in list
+     */
     public int[] values() {
         int[] contents = new int[size];
         BucketNode iteration = head;

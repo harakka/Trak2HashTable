@@ -3,7 +3,8 @@ package asriik.trak2;
 import java.util.Random;
 
 /**
- * Created by: harakka
+ * General toolkit class for utility functions.
+ * Created by: Antti Riikonen
  * Date and time: 1.4.2013, 23:27
  */
 public class Utility {

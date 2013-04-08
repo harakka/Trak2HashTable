@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 /**
+ * TestNG test for verifying some basic BucketList functionality.
  * Created by: Antti Riikonen
  * Date and time: 30.3.2013, 21:06
  */
