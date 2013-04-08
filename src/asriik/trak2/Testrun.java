@@ -8,7 +8,7 @@ package asriik.trak2;
 public class Testrun {
     // Variables for command line parameters
     // Test mode: can be either insert or distribution
-    public static TestMode paramMode;
+    private static TestMode paramMode;
     // Number of random keys to be generated and used in the test run.
     private static int paramNumberOfKeys;
     // Initial capacity (number of buckets in the hashtable).
@@ -24,28 +24,26 @@ public class Testrun {
     // Enum indicating test mode
     public static enum TestMode {insert, distribution, hashtime}
     // Stopwatch for timing program execution.
-    private static Stopwatch watch = new Stopwatch();
-    // Array of random keys to be used as input.
-    private static int[] keys;
+    private static final Stopwatch watch = new Stopwatch();
     // Array for simulating the buckets of a hash table in distribution and hashtime modes.
     private static int[] buckets;
-    // Hash table for use in insert test mode.
-    private static HashTable table;
 
 
     /**
      * Main method that runs the actual tests.
      */
     public static void main(String[] args) {
+        /* Commet this back in if you need time to attach a profiler
         try {
-            System.out.println("Waiting for 10 seconds, attach a debugger now!");
+            System.out.println("Waiting for 10 seconds, attach a profiler now!");
             Thread.sleep(10000);
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+            e.printStackTrace();
+        }*/
         // Read command line parameters and set up the test run settings accordingly
         setupFromParams(args);
-        keys = Utility.generateIntegers(paramNumberOfKeys);
+
+        int[] keys = Utility.generateIntegers(paramNumberOfKeys);
 
         // Run the selected test and output results
         switch (paramMode) {
@@ -101,7 +99,7 @@ public class Testrun {
 
             // Test: time the insertion of given amount of random generated keys into the table.
             case insert:
-                table = new HashTable(paramCapacity, paramLoadFactor, paramHashType);
+                HashTable table = new HashTable(paramCapacity, paramLoadFactor, paramHashType);
 
                 watch.start();
                 for (int i: keys) {
@@ -127,7 +125,7 @@ public class Testrun {
      * Examine the parameters passed to the program and configure the environment accordingly.
      * @param args arguments passed to the program
      */
-    public static void setupFromParams(String[] args) {
+    private static void setupFromParams(String[] args) {
         // Sanity check command line arguments and set up the test environment based on them.
         // If sanity check fails, print usage instructions in the catch block.
         try {

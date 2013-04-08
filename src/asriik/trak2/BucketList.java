@@ -28,12 +28,13 @@ public class BucketList {
 
         /**
          * Adds or modifies the child of this list node.
-         * @param newChild
+         * @param newChild new child node
          */
         public void setChild(BucketNode newChild) {
             this.child = newChild;
         }
 
+        @Override
         public String toString() {
             return Integer.toString(value);
         }

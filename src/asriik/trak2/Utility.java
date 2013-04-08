@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class Utility {
     // Random number generator for generating keys
-    private static Random rng = new Random();
+    private static final Random rng = new Random();
 
     /**
      * Fill an array of given size with random integers distributed evenly across the full range of Java integers.

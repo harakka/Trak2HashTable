@@ -9,7 +9,7 @@ public class HashTable {
     private final HashType type;
     // This value is recommended by Knuth in The Art Of Computer Programming, but it's unclear whether it works as well
     // for arrays whose capacity isn't a power of two.
-    private static double multiplierConstant = (java.lang.Math.sqrt(5) - 1) / 2;
+    private static final double multiplierConstant = (java.lang.Math.sqrt(5) - 1) / 2;
     private final double loadFactor;
     private final int initialSize;
     private int size = 0;
