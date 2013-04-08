@@ -56,6 +56,6 @@ public class BucketListTest {
         bucketlist.add(2);
         bucketlist.add(3);
         bucketlist.add(9999);
-        Assert.assertEquals("9999 3 2 1 ", bucketlist.toString());
+        Assert.assertEquals("9999 → 3 → 2 → 1 → ", bucketlist.toString());
     }
 }
