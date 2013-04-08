@@ -8,6 +8,7 @@ import java.util.Random;
  * Created by: Antti Riikonen
  * Date and time: 1.4.2013, 21:39
  */
+@Deprecated
 public class TestrunHashDistribution {
 
     // Stopwatch for timing program execution
@@ -42,7 +43,7 @@ public class TestrunHashDistribution {
 
         System.out.println("Hash calculation time: " + watch.getResult());
 
-        // Print collision chain length statistics
+        // Print statistics showing number distribution into buckets
         if (paramPrintDistribution) {
             System.out.println("Bucket\tCount");
             for (int i = 0; i < buckets.length; i++) {

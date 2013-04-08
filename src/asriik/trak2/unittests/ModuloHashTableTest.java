@@ -14,7 +14,7 @@ public class ModuloHashTableTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        hashtable = new HashTable(13, 0.75, HashTable.HashType.MODULO);
+        hashtable = new HashTable(13, 0.75, HashTable.HashType.modulo);
         for (int i: new int[]{-1,0,2, 100, 9999, 666}) {
             hashtable.add(i);
         }

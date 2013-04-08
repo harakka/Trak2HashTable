@@ -5,7 +5,7 @@ package asriik.trak2;
  * Date and time: 30.3.2013, 22:29
  */
 public class HashTable {
-    public enum HashType {MODULO, MULTIPLICATION};
+    public enum HashType {modulo, mult}
     private final HashType type;
     // This value is recommended by Knuth in The Art Of Computer Programming, but it's unclear whether it works as well
     // for arrays whose capacity isn't a power of two.
@@ -86,7 +86,7 @@ public class HashTable {
     }
 
     public int hash(int value, int capacity) {
-        if (type == HashType.MODULO) {
+        if (type == HashType.modulo) {
             return hashModulo(value, capacity);
         } else {
             return hashMultiplication(value, capacity);

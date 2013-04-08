@@ -4,6 +4,7 @@ package asriik.trak2;
  * Created by: Antti Riikonen
  * Date and time: 31.3.2013, 21:47
  */
+@Deprecated
 public class TestrunInsertions {
     // Parameter controlling output verbosity
     public static boolean paramVerbose;
@@ -15,20 +16,16 @@ public class TestrunInsertions {
     private static HashTable table;
 
     public static void main(String[] args) {
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
+        // Read command line parameters and config everything accordingly
         setupFromParams(args);
 
+        // Execute the test and time it
         watch.start();
         for (int i: keys) {
             table.add(i);
         }
         watch.stop();
-        //System.out.println(table.toString());
         System.out.println("Time\t\tKeys\t\tCapacity\t\tLoad factor\t\tLongest chain length");
         System.out.println(watch.toString() + ".\t" + table.getSize() + "\t" + table.getCapacity() + "\t" + table.getCurrentLoadFactor() + "\t" + table.longestChain());
 
@@ -57,10 +54,10 @@ public class TestrunInsertions {
             paramLoadFactor = Double.valueOf(args[1]);
             switch (args[2]) {
                 case "modulo":
-                    table = new HashTable(paramInitCap, paramLoadFactor, HashTable.HashType.MODULO);
+                    table = new HashTable(paramInitCap, paramLoadFactor, HashTable.HashType.modulo);
                     break;
                 case "multiplication":
-                    table = new HashTable(paramInitCap, paramLoadFactor, HashTable.HashType.MULTIPLICATION);
+                    table = new HashTable(paramInitCap, paramLoadFactor, HashTable.HashType.mult);
                     break;
                 default:
                     throw(new IllegalArgumentException("Invalid parameter: " + args[2] + ", should be either \"modulo\" or \"multiplication\""));
