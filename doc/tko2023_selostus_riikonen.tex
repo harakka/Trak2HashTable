@@ -1,0 +1,128 @@
+\documentclass{itlaitos}
+
+% Alkusäätöjä.
+\usepackage[utf8]{inputenc}
+\usepackage[finnish]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage[sc]{mathpazo}
+%\linespread{1.05}	% Palatino needs more leading (space between lines)
+\usepackage{graphicx}
+%\usepackage[dvips]{epsfig}
+%\usepackage[dvips]{graphics}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{xtab}
+\usepackage{verbatim}
+\usepackage{nag}
+\usepackage{amsthm,enumerate,amsmath,amscd,amssymb}
+
+% Lähdeluettelon otsikoksi ``Lähteet''
+\addto\captionsfinnish{\renewcommand{\refname}{Lähteet}}
+
+% Mikäli kärsit ylipitkistä rivistä, kokeile ottamalla allaoleva rivi käyttöön.
+\sloppy
+
+\begin{document}
+\title{TRAK II-kurssin harjoitustyön työseloste \\ Aihe: Hajautustaulut 1 \\ Antti Riikonen, 72913, asriik@utu.fi}
+\opinnayte{TRAK II harjoitustyö}
+\vuosi{2013 kevät}
+\laitos{IT-laitos}
+\oppiaine{Tietojenkäsittelytiede}
+\maketitle
+
+\tableofcontents 
+\newpage
+%Alkusäädöt ohi
+
+%Itse asiaan
+\newpage
+
+\setcounter{page}{1} % varsinaiset leipätekstisivut alkavat tästä
+%-----------------------------------------------------------------------------
+\section{Tehtävän kuvaus ja analysointi}  \pagestyle{fancy}
+
+
+Tietorakenteet ja algoritmit II-kurssin harjoitustyöni tehtävänantona oli ``Hajautustaulut I: Työssä törmäykset hoidetaan ketjuttamalla ja lisäksi on toteutettava myös tarvittavat lista-operaatiot. Työssä pitää vertailla myös kertolasku-ja jakojäännös-menetelmien suoritusaikaa''.
+
+Lähteenä toteutusta kirjoitettaessa on käytetty TRAK I-kurssin monistetta ja teosta Cormen, Leiserson, Rivest, Stein: Introduction To Algorithms (2nd edition).
+
+Päätin pyrkiä toteuttamaan tehtävänannon mahdollisimman selkeästi ja opettavaisesti, kuitenkaan tinkimättä tehokkuudesta. Lopputulos ei sellaisenaan ole kovin käyttökelpoinen tosimaailmassa, koska rajoitin tarkoituksella hajautustaulun avaimet kokonaislukutyyppisiksi yksinkertaisuuden ja nopeusvertailujen vuoksi, enkä toteuttanut satelliittidataa tai tukea geneerisille tietotyypeille. Uskon kuitenkin, että toteutukseni olisi haluttaessa mahdollista laajentaa sisältämään nämä ominaisuudet.
+
+%-----------------------------------------------------------------------------
+\section{Ratkaisuperiaate}
+
+Valitsin harjoitustyön toteutuskieleksi Javan. Toteuttamani hajautustaulun pohjana toimii Javan array-tietotyyppi, jonka päälle olen rakentanut vaadittavat toiminnot. Toteutukseni ei käytä Javan geneerisyys-ominaisuuksia vaan käyttää avaiminaan paljaita int-tyyppisiä muuttujia. Geneerisyys olisi edellyttänyt Integer-oliotyyppisten avainten käyttöä paljaiden lukuarvotyyppien sijaan, jolloin Javan autoboxing-mekanismi olisi saattanut aiheuttaa eroja nopeusvertailuihin.
+
+Lisäksi pidin geneerisyyttä tarpeettomana koska toteutuksessani ei muutenkaan ole avainarvojen lisäksi mitään satelliittidataa. En lähtenyt tavoittelemaankaan tosielämässä käyttökelpoista hajautustaulutoteutusta, vaan yksinkertaista, selkeää ja opettavaista toteutusta. Tämän vuoksi en myöskään lähtenyt toteuttamaan esim. Javan Collection-rajapintaa tai muitakaan kokoelmarajapintoja toteuttavaa tietorakennetta. Hajautusfunktiot myöskin ottavat syötteekseen ainoastaan kokonaislukuja esim. merkkijonojen tai muiden lukutyyppien sijaan.
+
+Hajautustaulu koostuu taulukosta jossa jokainen alkio on linkitetty lista, joihin törmäykset ketjuttuvat. Taulukkoa kasvatetaan kuormakertoimen ylittyessä. En toteuttanut taulukon kutistamista alkioiden lukumäärän käydessä pieneksi pitääkseni koodin yksinkertaisena ja välttääkseni taulukon koon jatkuvaa muuttamista mikäli siihen kohdistuu paljon peräkkäisiä lisäys- ja poistojonoja. Taulukkoon luodaan listaolioita ainoastaan silloin kun kyseistä taulukon solua tarvitaan hajautusoperaation tuloksena, minkä ansiosta tarpeettomia listaolioita ei tarvitse luoda ollenkaan. Tämä laiska alustustyyli voi säästää varsinkin suurilla listan koilla erittäin monelta turhan uuden listaolion luonnilta.
+
+Ohjelman komentorivikäyttöliittymä mahdollistaa halutuntyyppisten ja -suuruisten testiajojen suorittamisen. Testiajoissa käytetään satunnaislukuja, joiden generointiin käytettyä aikaa ei lasketa varsinaisen testattavan toiminnon kellottamiseen. Hyvin suurtenkin avainmäärien käyttäminen testiajoissa on mahdollista, joskin esim. 25 miljoonan avaimen lisäys-testi vaati käyttämälläni tietokoneella noin 3.5 gigatavua muistia.
+
+%-----------------------------------------------------------------------------
+\section{Ohjelman ja sen osien kuvaaminen}
+
+Ohjelma koostuu kolmesta luokkaryhmästä: hajautustaulutoteutuksesta (HashTable, BucketList, BucketListin sisäluokka BucketNode), testiajojen käyttöliittymästä ja sen oheisluokista (Testrun, Stopwatch, Utility), sekä yksikkötesteistä (BucketListTest, HashTableTest).
+
+Hajautustaulussa itsessään on kolme pääluokkaa: BucketList on hajautustaulun lokerona tai ämpärinä (kuten asia usein englanninkielisessä kirjallisuudessa ilmaistaan) toimiva yksinkertainen linkitetty lista. Sillä on apuluokkana sisäluokka BucketNode, joka vastaa linkitetyn listan solmua. Lista on yhteen suuntaan linkitetty ja lisäykset tapahtuvat aina listan alkuun, mikä on sekä nopeaa että yksinkertaista toteuttaa. HashTable on varsinainen toteutuksen pääluokka ja se sisältää taulukon BucketList-olioita, joihin hajautetut avaimet talletetaan tarvittaessa törmäykset ketjuttaen.
+
+Hajautustaulua luotaessa sille määritetään lähtöarvoina koko (eli lokeroiden lukumäärä), kuormakerroin (load factor) ja käytetyn hajautusfunktion tyyppi (kertojäännös- tai kertolaskumenetelmä). Kuormakerroin on yksinkertaisesti senhetkisten talletettujen alkioiden lukumäärän ja senhetkisen koon suhde. Todellisen kuormakertoimen kasvaessa määrättyä kerrointa suuremmaksi hajautustaulun koko kaksinkertaistetaan luomalla uusi, suurempi taulukko, johon kaikki avaimet uudelleenhajautetaan.
+
+En toteuttanut harjoitustyössä BucketList-taulukon kutistamista kuormakertoimen alittuessa merkittävästi, estääkseni ns. trashingia varsinkin alhaisilla taulukon koilla, ja pitääkseni koodin yksinkertaisena. Taulukosta alustetaan ainoastaan ne lokerot joita todellisuudessa tarvitaan, millä estetään suurehko määrä tarpeetonta BucketList-olioiden luomista varsinkin suurilla koilla.
+
+Testrun on ohjelman pääkäyttöliittymä. TODO
+
+Stopwatch-luokka sisältää ajanottoon käytettyjä toimintoja. Ajanotto on pohjimmiltaan riippuvainen käyttöjärjestelmästä, mutta ainakin teoriassa sen tarkkuus on millisekunti-luokkaa. Utility-luokka sisältää ohjelman käyttämän java.util.Random-satunnaislukugeneraattorin, ja apumetodin jolla luodaan suuria määriä satunnaislukuja kerralla tätä generaattoria käyttäen.
+
+BucketListTest ja HashTableTest sisältävät joitain yksinkertaisia TestNG-kirjastoa käyttäviä yksikkötestejä, jotka tarkistavat hajautustaululuokkien perustoimintojen toimivuuden. Nämä testit eivät ole tarkoituksellakaan valtavan kattavia, vaan käytin niitä lähinnä apuna hajautustaulun perustoimintojen suunnittelussa.
+
+Ohjelma koostuu viidestä luokkatiedostosta: \texttt{UpdateChecker.java}, \texttt{GUI.java}, \texttt{URLPanel.java}, \texttt{HashedURL.java} sekä  \texttt{URLEngine.java}. Näistä \texttt{UpdateChecker} on ohjelman ajettava luokka, ja se sisältää ainoastaan muutaman rivin \texttt{main()}-metodin, joka käynnistää pääkäyttöliittymäsäikeen ja yhdistää sen \texttt{URLEngine}-tietovarastoon.
+
+\texttt{GUI}-luokka muodostaa ohjelman pääikkunan (\texttt{JFrame}) sekä pitää sisällään ohjelman keskeisen käyttöliittymäkoodin. Luokan rakennin luo käyttöliittymän komponentit kuten valikot ja asettelee ne paikoilleen, sekä yhdistää komponenttien tapahtumakäsittelijät \texttt{GUI}-luokan sisäluokkina oleviin toiminto-olioihin. Näitä ovat abstraktin \texttt{GUIAction}-luokan perilliset kuten \texttt{LoadAction}, \texttt{SaveAction} jne, yksi jokaista käyttöliittymätoimintoa kohti. Näin komponentin, kuten pudotusvalikon vaihtoehdon, klikkaaminen laukaisee siihen kytketyn toiminto-olion \texttt{ActionPerformed}-metodin, joka sisältää kyseisen toiminnon suorittavan koodin.
+
+\texttt{URLPanel}-luokka on Swing-komponentti, joka kuuntelee \texttt{Observable}-rajapinnan avulla kutakin \texttt{URLPanel}ia vastaavan \texttt{HashedURL}-olion tilan muutoksia, ja esittää tällaisen olion tietosisällön pääikkunassa. \texttt{URLPanel}eita lisätään ja poistetaan ohjelman pääikkunassa sitä mukaa, kun käyttäjä manipuloi listaa URL-osoitteista.
+
+Ohjelma ylläpitää \texttt{URLEngine}-olion tietovarastossa listaa \texttt{HashedURL}-olioista. Yksittäinen \texttt{HashedURL} säilyttää tietoa käyttäjän antamasta URL-osoitteesta, kyseisen URL-osoitteen sisällön SHA-1-algoritmilla lasketusta hajautusarvosta ja ajankohdasta, jolloin tämä arvo laskettiin. Käyttäjän pyytäessä ohjelma tarkastaa, ovatko osoitteiden sisällöt muuttuneet vertailemalla niiden hajautusarvoja, ja mikäli ovat, \texttt{HashedURL}it ilmoittavat vastinkäyttöliittymäkomponenteilleen että nämä voivat päivittää tietonsa.
+
+\texttt{URLEngine} sisältää myös staattiset metodit URL-listojen lataamiseksi ja tallentamiseksi. Tiedostoformaatti on yksinkertainen:
+\begin{verbatim}
+http://www.utu.fi/
+14e65a4f796bc00dddb9b1a37544f3913602c938
+1296685937597
+http://www.it.utu.fi/
+f61e1a3f6aebf045016e87cfe4662f36589b3b3d
+1296685937642
+\end{verbatim}
+Yllä on esimerkki URL-tiedostosta. Yhden \texttt{HashedURL}-tietueen muodostavat kolme peräkkäistä riviä, ensimmäisenä sivun URL-osoite, toisena viimeksi laskettu hajautusarvo ja kolmantena \texttt{long}-tyyppinen aikaleima.
+
+%-----------------------------------------------------------------------------
+\section{Testausjärjestely}
+Ohjelman ohessa ei ole yksikkötestejä tai muuta testiautomaatiojärjestelmää kahdesta syystä. Ensinnäkin, ohjelman toiminnallisuudesta merkittävä osa on käyttöliittymäkoodia, jonka testaaminen automaattisesti vaatisi tämän harjoitustyön laajuuden ylittäviä ratkaisuja. Toiseksi, käyttöliittymäkoodin ulkopuolista koodia on määrällisesti niin vähän, etten katsonut yksikkötestien olevan tarpeeksi hyödyllisiä suhteutettuna testien potentiaalsiesti kattamien koodirivien määrään ja testien kirjoittamiseen vaadittavaan työhön.
+
+Tämän vuoksi tyydyin testaamaan ohjelmaa kattavasti manuaalisin keinoin. Testasin ohjelmaa Linux-, Windows-ja OSX-käyttöjärjestelmissä sekä erilaisissa locale-ympäristöissä löytääkseni ympäristöön liittyviä ongelmia. Testasin kaikkia käyttöliittymätoimintoja kattavasti tarkkaillen samalla syöttö-ja tallennustiedostojen sisältöjä ohjelman käytön eri vaiheissa. Johtuen käytetyistä \texttt{SwingWorker}-apusäikeistä on todennäköistä että ohjelma sisältää säiehasardeja, mutta näiden ilmeneminen käytännössä on epätodennäköistä johtuen yksittäisessä apusäikeessä suoritettavan tehtävän lyhyestä kestosta.
+ 
+\newpage
+\section{Liitteet}
+\subsection{Lähdekoodi}
+Ohjelman läh\-de\-koo\-di sijaitsee har\-joi\-tus\-työn zip-\-pak\-kauk\-ses\-sa \texttt{src}-ha\-ke\-mis\-tos\-sa. Pää\-luo\-kan nimi pa\-ke\-toin\-tei\-neen on \texttt{asriik.updatechecker.UpdateChecker}.
+
+\subsection{Javadoc-dokumentaatio}
+Javadoc-dokumentaatio sijaitsee harjoitustyön zip-pakkauksessa \texttt{doc}-hakemistossa, päätiedosto on nimeltään \texttt{index.html}.
+
+\subsection{Käyttöohje}
+Ohjelma on suoraan ajettavissa oleva jar-pakkaus, \texttt{UpdateChecker.jar}. Komentoriviltä ohjelman voi ajaa komennolla \texttt{java -jar UpdateChecker.jar} kyseisen tiedoston sisältävästä hakemistosta käsin. Jar-pakkaus voidaan purkaa millä tahansa zip-tiedostoja ymmärtävällä ohjelmalla tarvittaessa. Harjoitustyöpaketissa on mukana \emph{url\_lista\_esim.txt}-niminen tiedosto, jota voi käyttää apuna ohjelman lataustoimintoa kokeiltaessa.
+
+Ohjelmaa käytetään kirjoittamalla pääikkunan tekstikenttään www-osoitteita protokolla mukaanlukien, esimerkiksi \texttt{http://www.utu.fi}, ja painamalla enteriä. Tällöin ohjelma lisää osoitteen listaansa, minkä jälkeen \emph{File}-valikon \emph{Check for updates}-toiminnolla voidaan tarkastaa, ovatko osoitteiden sisällöt muuttuneet.
+
+Klikkaamalla osoitteen linkkitekstiä kyseinen osoite avautuu www-selaimessa, mikäli tämä toiminto toimii Javan rajapinnan avulla senhetkisessä ympäristössä. \emph{Remove}-painike poistaa osoitteen ohjelman listasta.  \emph{File}-valikon \emph{Load URL list}-ja \emph{Save URL list}-toiminnot avaavat tiedostovalitsinikkunan halutun toiminnon suorittamiseksi. \emph{File}-valikon \emph{Remove all URLs}-toiminto pyyhkii kaikki osoitteet listasta.
+
+Kaikki toiminnot toimivat myös valikossa ilmoitetuilla pikanäppäimillä.
+%-----------------------------------------------------------------------------
+
+
+
+%-----------------------------------------------------------------------------
+\cleardoublepage %Ilman tätä lähdeluettelo ei näy sisällysluettelossa?
+\addcontentsline{toc}{section}{Lähteet}
+
+\end{document}

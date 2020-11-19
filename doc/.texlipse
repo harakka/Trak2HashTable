@@ -1,0 +1,13 @@
+#TeXlipse project settings
+#Fri Feb 04 05:46:21 EET 2011
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=tko2023_selostus_riikonen.tex
+outputFile=tko2023_selostus_riikonen.pdf
+langSpell=en
+markDer=true
+srcDir=
